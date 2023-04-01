@@ -1,6 +1,5 @@
 import random
 from math import floor
-# from pokemon import Pokemon
 from dataclasses import fields
 
 
@@ -98,77 +97,3 @@ class Combat:
             if getattr(pokemon.moves, move.name) is not None:
                 available_moves.append(idx + 1)
         return available_moves
-
-    # def check_available_moves(self):
-    #     """Check which moves the Pokemon has available
-
-    #     Returns
-    #     -------
-    #     list
-    #     a list of of move numbers, e.g. all moves is [1,2,3,4]
-    #     """
-    #     available_moves = []
-    #     for idx, move in enumerate(fields(self.moves)):
-    #         if getattr(self.moves, move.name) is not None:
-    #             available_moves.append(idx + 1)
-    #     return available_moves
-
-
-    # def fight(self, enemy, random_fight=True, turn=1):
-    #     """
-    #     Let a pokemon fight another pokemon
-
-    #     While both pokemon are alive pokemon keep fighting in recursive loop of fight()
-    #     Pokemon can choose their own moves at random or if random_fight is set to false a user can choose moves.
-
-    #     ...
-
-    #     Parameters
-    #     ----------
-    #     enemy : Pokemon
-    #         the enemy pokémon
-    #     random_fight : boolean
-    #         True: pokemon choose their own moves at random. False: Player chooses pokemon moves
-    #     turn : int
-    #         shows in which turn the fight is.
-    #     """
-    #     if self.hp > 0:  #
-    #         print_heading(f'TURN {turn}')
-    #         print(f"{self.name} hp:{self.hp} ---> {enemy.name} hp:{enemy.hp}"
-    #               f" (type multiplier = {enemy.multiplicative_damage[self.type]})")
-
-    #         available_moves = self.check_available_moves()
-    #         input_nr = 0
-    #         if random_fight:
-    #             move_nr = "move" + str(random.choice(available_moves))
-    #         else:
-    #             self.print_moves()
-    #             while True:
-    #                 try:
-    #                     input_nr = int(input("Please enter the move you want to use: "))
-    #                 except ValueError:
-    #                     print("The input value is not an integer")
-    #                     continue
-    #                 if input_nr not in available_moves:
-    #                     print("The input value is not an move the pokemon has")
-    #                     continue
-    #                 else:
-    #                     break
-    #             move_nr = "move" + str(input_nr)
-
-    #         selected_move = getattr(self.moves, move_nr)
-    #         move_name = selected_move['move_name']
-
-    #         # attack damage is  (move_damage * enemy_dmg_taken_per_type) / GLOBAL_DAMAGE_REDUCTION
-    #         attack_damage = floor(
-    #             (selected_move['attack'] * enemy.multiplicative_damage[self.type]) / GLOBAL_DAMAGE_REDUCTION)
-    #         enemy.hp -= attack_damage
-
-    #         print(f"{self.name} did {move_name} for {attack_damage} Damage to {enemy.name}")
-    #         print(f"{enemy.name} has {enemy.hp} HP left")
-
-    #         return enemy.fight(self, random_fight, turn + 1)  # now the other pokemon attacks
-    #     else:
-    #         self.hp = 0  # leave pokemon with 0 health instead of a negative value
-    #         print_heading("WINNER: ")
-    #         print(f"{enemy.name} wins! ({enemy.hp} HP left)")
