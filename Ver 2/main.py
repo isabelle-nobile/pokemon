@@ -1,6 +1,6 @@
 from pokemon import Pokemon, print_heading
 import cmd
-from combat2 import Combat
+from combat import Combat
 
 
 def parse(arg):
