@@ -3,8 +3,9 @@ from Modele.pokemon import Pokemon
 class MenuView:
     """La classe qui affiche le menu principal"""
 
-    def __init__(self):
+    def __init__(self, pokemons):
         """Afficher les possibilités du menu principal à l'utilisateur"""
+        self.pokemons = pokemons
 
         print("\n\n ---- Pokemon ----")
         print("\n\n---- Menu principal ----\n")
@@ -37,23 +38,15 @@ class MenuView:
             self.launch_command_menu()
 
         return self.command
-    
+
 
     def launch_pokemon_choices(self):
-        """Choisis le choix des pokemons """
-        print("\n\n---- Choix des pokemons ----\n")
-        print("\nMerci d'entrer un des numero suivant: ")
-        print(
-            "1 - Pikachu:                ",
-            "Stats : \n Attaque: 55 \n Défense: 40",
-        )
-        print(
-            "2 - Evoli:              ",
-            "Stats : \n Attaque: 55 \n Défense: 50",
-        )
-        print(
-            "3 - Mew:              ",
-            "Stats : \n Attaque: 100 \n Défense: 100",
-        )
-        self.command = None
+        """Permet de choisir un pokemon et de renvoyer ses attributs"""
+        print("Voici les pokemons disponibles :")
+        for index, pokemon in enumerate(self.pokemons):
+            print(f"{index + 1} - {pokemon['name']}")
+        
+        pokemon_choice = int(input("Choisissez un Pokemon en entrant son numéro : "))
+        pokemon_choice -= 1
 
+        return self.pokemons[pokemon_choice]
