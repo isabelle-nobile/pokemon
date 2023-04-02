@@ -1,4 +1,4 @@
-from Ver_3.PokemonShell import PokemonShell
+from Pokemon.pokemonshell import PokemonShell
 
 def main():
     PokemonShell().cmdloop()

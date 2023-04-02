@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from move import Move
+from Pokemon.move import Move
 
 @dataclass
 class MoveSet:

@@ -1,5 +1,6 @@
 import random
 from math import floor
+from Pokemon.type import Type
 from dataclasses import fields
 
 
@@ -8,36 +9,21 @@ GLOBAL_DAMAGE_REDUCTION = 4  # damage reduction for fights because hp and damage
 def print_heading(heading):
     print(f"---------------------------{heading}---------------------------")
 
-
 class Combat:
+    def __init__(self):
+        self.attack_order = []
 
     @staticmethod
     def fight(pokemon1, pokemon2, random_fight=True):
-        """
-        Let two pokemons fight each other.
-
-        While both pokemons are alive they keep fighting in a recursive loop of fight()
-        Pokemons can choose their own moves at random or if random_fight is set to false a user can choose moves.
-
-        ...
-
-        Parameters
-        ----------
-        pokemon1 : Pokemon
-            The first pokemon to fight.
-        pokemon2 : Pokemon
-            The second pokemon to fight.
-        random_fight : boolean
-            True: pokemons choose their own moves at random. False: Player chooses pokemons' moves.
-        """
         turn = 1
+        pokemon_type = Type()
         while pokemon1.hp > 0 and pokemon2.hp > 0:
             print_heading(f'TURN {turn}')
             print(f"{pokemon1.name} hp:{pokemon1.hp} ---> {pokemon2.name} hp:{pokemon2.hp}"
-                  f" (type multiplier = {pokemon2.multiplicative_damage[pokemon1.type]})")
+                f" (type multiplier = {pokemon_type.get_multiplier(pokemon1.type, pokemon2.type)})")
 
             # choose move for pokemon1
-            available_moves = Combat.check_available_moves(pokemon1) # Modification ici
+            available_moves = Combat.check_available_moves(pokemon1)
             input_nr = 0
             if random_fight:
                 move_nr = "move" + str(random.choice(available_moves))
@@ -61,37 +47,46 @@ class Combat:
 
             # attack damage is  (move_damage * enemy_dmg_taken_per_type) / GLOBAL_DAMAGE_REDUCTION
             attack_damage = floor(
-                (selected_move['attack'] * pokemon2.multiplicative_damage[pokemon1.type]) / GLOBAL_DAMAGE_REDUCTION)
+                (selected_move['attack'] * pokemon_type.get_multiplier(pokemon1.type, pokemon2.type)) / GLOBAL_DAMAGE_REDUCTION)
             pokemon2.hp -= attack_damage
 
             print(f"{pokemon1.name} did {move_name} for {attack_damage} Damage to {pokemon2.name}")
             print(f"{pokemon2.name} has {pokemon2.hp} HP left")
+            if pokemon2.hp <= 0:
+                # Pokemon 2 is KOed
+                winner = pokemon1
+                loser = pokemon2
+                loser.hp = 0
+                print_heading("WINNER: ")
+                print(f"{winner.name} wins! ({winner.hp} HP left)")
+                print_heading("LOSER: ")
+                print(f"{loser.name} loses! ({loser.hp} HP left)")
+                print_heading("Start again ?")
+                print(f"Use again the fight command and don't forget to revive your pokemons")
+                break
 
             # switch pokemon1 and pokemon2
             pokemon1, pokemon2 = pokemon2, pokemon1
             turn += 1
 
-        # declare winner
-        winner = pokemon1 if pokemon1.hp > 0 else pokemon2
-        loser = pokemon2 if pokemon1.hp > 0 else pokemon1
-        loser.hp = 0
-        print_heading("WINNER: ")
-        print(f"{winner.name} wins! ({winner.hp} HP left)")
+            if pokemon1.hp <= 0:
+                # Pokemon 1 is KOed
+                winner = pokemon2
+                loser = pokemon1
+                loser.hp = 0
+                print_heading("WINNER: ")
+                print(f"{winner.name} wins! ({winner.hp} HP left)")
+                print_heading("LOSER: ")
+                print(f"{loser.name} loses! ({loser.hp} HP left)")
+                print_heading("Start again ?")
+                print(f"Use again the fight command and don't forget to revive the pokemons")
+
+
+
+
 
     @staticmethod
     def check_available_moves(pokemon):
-        """Check which moves the Pokemon has available
-
-        Parameters
-        ----------
-        pokemon : Pokemon
-            The active Pokemon in the combat.
-
-        Returns
-        -------
-        list
-            a list of of move numbers, e.g. all moves is [1,2,3,4]
-        """
         available_moves = []
         for idx, move in enumerate(fields(pokemon.moves)):
             if getattr(pokemon.moves, move.name) is not None:

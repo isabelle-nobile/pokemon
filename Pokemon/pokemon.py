@@ -2,19 +2,14 @@ import csv
 import random
 from pathlib import Path
 from dataclasses import fields
-from type import Type
-from moveset import MoveSet
-
-
+from Pokemon.type import Type
+from Pokemon.moveset import MoveSet
 
 def print_heading(heading):
     print(f"---------------------------{heading}---------------------------")
 
 class Pokemon(object):
-    """
-    A class used to represent a pokémon
-
-    """
+    """A class used to represent a pokémon"""
 
     all = {}  # dict so each pokemon can only exist ones
 
@@ -35,8 +30,6 @@ class Pokemon(object):
         """Custom string to print objects with the Pokemon class """
 
         return f"Pokemon('{self.name}', {self.hp}, {self.moves}, {self.type},{self.multiplicative_damage})"
-
-    
 
     @staticmethod
     def print_all_pokemon():
@@ -73,27 +66,22 @@ class Pokemon(object):
         print_heading('DAMAGE TAKEN MULTIPLIER FOR POKEMON TYPE')
         if self.type in Type().type_dict:
             type_multipliers = Type().type_dict[self.type]
-            for pokemon_type, multiplier in type_multipliers.items():
-                print(f"{pokemon_type}: {multiplier}")
+            types = list(type_multipliers.keys())
+            multipliers = list(type_multipliers.values())
+            rows = []
+            for i in range(0, len(types), 3):
+                row = '    '.join([f"{types[j]}: {multipliers[j]}" for j in range(i, min(i+3, len(types)))])
+                rows.append(row)
+            table = '\n'.join(rows)
+            print(table)
         else:
             print(f"Type '{self.type}' not found in type chart.")
 
 
 
-
-
     @classmethod
     def instantiate_from_csv(cls, available_moves=4):
-        """instantiate all pokémon in datafile and give each pokémon random moves
-
-        ...
-
-        Parameters
-        ----------
-        available_moves : int
-            the amount of moves each instantiated Pokemon should have
-        """
-        
+        """instantiate all pokémon in datafile and give each pokémon random moves"""
 
         base_path = Path(__file__).parent  # absolute path so its works when used in all locations' e.g. testing file
 
@@ -236,23 +224,13 @@ class Pokemon(object):
         )
 
     def revive(self, revive_hp=100):
-        """Revive the pokemon
-
-        Pokemon can be given any amount of hp, base is 100
-
-        ...
-
-        Parameters
-        ----------
-        revive_hp : int
-            the hp the Pokemon should revive with
-        """
+        """Revive the pokemon. Pokemon can be given any amount of hp, base is 100"""
 
         self.hp = revive_hp
         
     def fight(self, opponent_pokemon, combat_instance, random_fight=None):
-        ...
-        # call the fight method of the Combat class
+        """Call the fight method of the Combat class"""
+        
         combat_instance.fight(self, opponent_pokemon, random_fight=random_fight)
 
 
